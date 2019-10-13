@@ -1,4 +1,5 @@
 import praw
+import re
 
 
 user_name = 'Armcollector'
@@ -12,6 +13,15 @@ reddit = praw.Reddit(client_id=client_id,
             user_agent=user_agent)
 
 
+c = None
 for comment in reddit.subreddit('chess').comments():
-    print(comment)
-    
+    if not c:
+        c = comment
+        print(c.body)
+        
+
+    if re.search("(?i)reset the counter",c.body):
+        print(c, c.body)
+
+        
+pass
