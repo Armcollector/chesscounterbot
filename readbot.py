@@ -14,14 +14,13 @@ reddit = praw.Reddit(client_id=client_id,
 
 
 c = None
-for comment in reddit.subreddit('chess').comments():
-    if not c:
-        c = comment
-        print(c.body)
+for comment in reddit.subreddit('chess').comments(limit=1000):
         
 
-    if re.search("(?i)reset the counter",c.body):
-        print(c, c.body)
+    if re.search("(?i)reset the counter",comment.body):
+        c = comment
+        print(comment, comment.body, comment.created_utc)
+        
 
         
 pass
