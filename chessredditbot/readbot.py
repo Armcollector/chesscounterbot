@@ -1,7 +1,7 @@
 import praw
 import re
-import config
-import database
+import config 
+import database as database
 
 
 
@@ -20,7 +20,7 @@ for comment in reddit.subreddit('chess').comments(limit=1000):
         print(comment, comment.body, comment.created_utc)
         
         if database.submission_is_new(comment.submission.id):
-            print("is new")
+            database.record_submisson(comment.submission.id, comment.id, comment.submission.created_utc, 0, comment.created_utc, comment.submission.shortlink)
 
         
 print(cnt)
