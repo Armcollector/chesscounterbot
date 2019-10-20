@@ -4,6 +4,9 @@ import config
 
 
 
+def check_if_new():
+    pass
+
 
 reddit = praw.Reddit(client_id=config.client_id,
             client_secret=config.client_secret,
