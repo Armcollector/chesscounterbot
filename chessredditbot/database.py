@@ -1,10 +1,19 @@
 import pyodbc
 import config
+
+
+
+def submission_is_new(submission_id):
+    cursor, _ = get_cursor_and_connection()
+    cursor.execute( "select count(*) from recorded_resets where submission = ?", submission_id )
+    count = cursor.fetchone()
+
+    return count[0] == (0,)
+
+
 def get_cursor_and_connection():
     cnxn = pyodbc.connect(config.connectionstring)
-    # Create a cursor from the connection
     cursor = cnxn.cursor()
-
     return cursor, cnxn
 
 
