@@ -11,8 +11,9 @@ reddit = praw.Reddit(client_id=config.client_id,
 
 
 c = None
+cnt = 0
 for comment in reddit.subreddit('chess').comments(limit=1000):
-        
+    cnt +=1
 
     if re.search("(?i)reset the counter",comment.body):
         c = comment
@@ -20,4 +21,5 @@ for comment in reddit.subreddit('chess').comments(limit=1000):
         
 
         
+print(cnt)
 pass
