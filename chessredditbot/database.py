@@ -26,16 +26,14 @@ def get_cursor_and_connection():
 
 
 
-def get_all_data():
+def get_latest():
     cursor, _ = get_cursor_and_connection()
 
     cursor.execute("""
-    select * from test
+    select submision_created_utc, submission_url from recorded_resets
+    where submision_created_utc = (select max(submision_created_utc) from recorded_resets)
     """)
 
-    rows = cursor.fetchall()
+    row = cursor.fetchone()
 
-    return [[row[0]] for row in rows]
-
-if __name__ == '__main__':
-    print(get_all_data())
+    return row
