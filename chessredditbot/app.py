@@ -1,27 +1,23 @@
 import sqlite3 as sql
 
 from flask import Flask,render_template
+import database
+from datetime import datetime,timezone
 app = Flask(__name__)
 
 DATABASE = 'database.db'
 
 @app.route("/")
 def hello():
-    return "Chessbot, front page"
 
-@app.route('/list')
-def list():
-   con = sql.connect("database.db")
-   con.row_factory = sql.Row
-   
-   cur = con.cursor()
-   cur.execute("select * from students")
-   
-   rows = cur.fetchall()
-   
-   return render_template("list.html",rows = rows)
+    time_since_creation, image_link = database.get_latest()
 
+    time_since_creation = str(datetime.now(timezone.utc) - datetime.fromtimestamp(time_since_creation,tz=timezone.utc))
+    
 
+    return render_template("front_page.html", time=time_since_creation, image=image_link)
+    
 
 if __name__ == "__main__":
+    
     app.run(host='0.0.0.0')
