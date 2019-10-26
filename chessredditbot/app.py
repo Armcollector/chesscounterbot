@@ -1,6 +1,6 @@
 import sqlite3 as sql
 
-from flask import Flask,render_template,request
+from flask import Flask,render_template,request,redirect,url_for
 import database
 import praw
 from datetime import datetime,timezone
@@ -10,12 +10,11 @@ app = Flask(__name__)
 DATABASE = 'database.db'
 
 the_token = ""
+reddit = ""
 
 @app.route("/")
 def homepage():
-    text = 'blah'
-
-
+    global reddit
     if not the_token:
         
         reddit = praw.Reddit(
@@ -26,20 +25,15 @@ def homepage():
             )
 
 
-        text = f" I dont have the token: {reddit.auth.url(['identity'], '...','permanent')}"
+        text = f' I dont have the token: <a href="{reddit.auth.url(["identity"], "...","permanent")} "> Click to login </a>'
 
         
         
     else:
         text =" I do have the token "
-
-    # link_no_refresh = reddit.get_authorize_url('UniqueKey')
-    # link_refresh = reddit.get_authorize_url('DifferentUniqueKey',
-    #                                    refreshable=True)
-    # link_no_refresh = "<a href=%s>link</a>" % link_no_refresh
-    # link_refresh = "<a href=%s>link</a>" % link_refresh
-    # text = "First link. Not refreshable %s</br></br>" % link_no_refresh
-    # text += "Second link. Refreshable %s</br></br>" % link_refresh
+        refresh = reddit.auth.authorize(the_token)
+        text += str(reddit.user.me())
+    
     return text
 
     #time_since_creation, image_link = database.get_latest()
@@ -52,28 +46,13 @@ def homepage():
 
 @app.route('/authorize_callback')
 def authorized():
-    state = request.args.get('state', '')
+    global the_token
     code = request.args.get('code', '')
-    #info = reddit.get_access_information(code)
-    #user = reddit.get_me()
-    info = "unknown info"
-    user = "unknown user"
-    variables_text = "State=%s, code=%s, info=%s." % (state, code,
-                                                      info)
-    
+
     the_token = code
 
-    return variables_text + "<br><br>the correct code idiot: " + reddit.auth.authorize(code) + "<br><br>" + str(reddit.user.me())
+    return redirect(url_for('homepage'))
 
 if __name__ == "__main__":
-    reddit = praw.Reddit(
-            client_id=config.client_id,
-            client_secret=config.client_secret,
-            user_agent=config.user_agent,
-            refresh_token=config.refresh_token
-            )
-
-    print(reddit.auth.scopes())
     
-
-    app.run(debug=True, port=5000)
+    app.run()
