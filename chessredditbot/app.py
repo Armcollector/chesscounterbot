@@ -4,17 +4,19 @@ from flask import Flask,render_template,request,redirect,url_for
 import database
 import praw
 from datetime import datetime,timezone
-import config
+import chessredditbot.config as config
 app = Flask(__name__)
 
 DATABASE = 'database.db'
 
 the_token = ""
 reddit = ""
+refresh = None
+
 
 @app.route("/")
 def homepage():
-    global reddit
+    global reddit, refresh
     if not the_token:
         
         reddit = praw.Reddit(
@@ -33,7 +35,7 @@ def homepage():
         text =" I do have the token "
         refresh = reddit.auth.authorize(the_token)
         text += str(reddit.user.me())
-    
+        
     return text
 
     #time_since_creation, image_link = database.get_latest()
