@@ -1,5 +1,5 @@
 import pyodbc
-import chessredditbot.config as config
+import config
 from datetime import datetime
 
 
