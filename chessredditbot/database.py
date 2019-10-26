@@ -1,6 +1,6 @@
 import pyodbc
 import config
-
+from datetime import datetime
 
 
 def submission_is_new(submission_id):
@@ -25,7 +25,6 @@ def get_cursor_and_connection():
     return cursor, cnxn
 
 
-
 def get_latest():
     cursor, _ = get_cursor_and_connection()
 
@@ -37,3 +36,11 @@ def get_latest():
     row = cursor.fetchone()
 
     return row
+
+
+def log(log_text):
+    cursor, cnxn = get_cursor_and_connection()
+
+    cursor.execute("insert into chessredditbot_log values (?,?)",datetime.now(), log_text )
+    cnxn.commit()
+    cnxn.close()

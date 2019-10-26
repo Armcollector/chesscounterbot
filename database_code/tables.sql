@@ -10,3 +10,9 @@ create table recorded_resets
 )
 
 
+drop table if exists chessredditbot_log
+create table chessredditbot_log
+(
+    dato_tid datetime,
+    text varchar(max)
+)
